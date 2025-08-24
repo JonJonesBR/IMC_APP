@@ -20,6 +20,12 @@ const nextConfig: NextConfig = {
     // 构建时忽略ESLint错误
     ignoreDuringBuilds: true,
   },
+  // Export static HTML for hosting on GitHub Pages
+  output: 'export',
+  // Quando publicado no GitHub Pages em um repositório (https://<user>.github.io/IMC_APP),
+  // precisamos prefixar as rotas e assets com o nome do repositório.
+  basePath: '/IMC_APP',
+  assetPrefix: '/IMC_APP/',
 };
 
 export default nextConfig;

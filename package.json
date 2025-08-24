@@ -10,7 +10,9 @@
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
-    "db:reset": "prisma migrate reset"
+    "db:reset": "prisma migrate reset",
+    "export": "next build && next export",
+    "deploy": "npm run build && gh-pages -d out"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -92,9 +94,10 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.5",
+    "gh-pages": "^6.3.0",
     "nodemon": "^3.1.10",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.5",
-    "typescript": "^5"
+    "typescript": "5.9.2"
   }
 }
