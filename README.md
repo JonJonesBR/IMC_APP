@@ -1,6 +1,6 @@
 # Calculadora de IMC
 
-Aplicativo web para cálculo do Índice de Massa Corporal (IMC) em um único arquivo HTML, desenvolvido para funcionar corretamente no GitHub Pages.
+Aplicativo web para cálculo do Índice de Massa Corporal (IMC) em HTML.
 
 ## ✨ Tecnologias Utilizadas
 
