@@ -1,59 +1,40 @@
+# Calculadora de IMC
 
-# IMC_APP
-
-Aplicativo web para cálculo do Índice de Massa Corporal (IMC), desenvolvido com Next.js, TypeScript, Tailwind CSS e Prisma. Permite ao usuário calcular o IMC, visualizar resultados e pode ser expandido para histórico e outras funcionalidades relacionadas à saúde.
-
+Aplicativo web para cálculo do Índice de Massa Corporal (IMC) em um único arquivo HTML, desenvolvido para funcionar corretamente no GitHub Pages.
 
 ## ✨ Tecnologias Utilizadas
 
-- **Next.js 15**
-- **TypeScript 5**
-- **Tailwind CSS 4**
-- **Prisma ORM**
-- **shadcn/ui** (componentes de interface)
-
-
-
+- **HTML5**
+- **CSS3 (Tailwind CSS)**
+- **JavaScript (ES6+)**
+- **LocalStorage** para armazenamento local
 
 ## ⚙️ Funcionalidades
 
 - Cálculo do IMC a partir de peso e altura
 - Exibição do resultado e classificação
 - Interface moderna e responsiva
-- Estrutura pronta para expansão (histórico, gráficos, autenticação, etc.)
-
+- Histórico de cálculos com armazenamento local
+- Funciona completamente offline após o primeiro carregamento
 
 ## 🚀 Como rodar o projeto
 
+### Opção 1: Abrir diretamente no navegador
+1. Faça o download do arquivo `index.html`
+2. Abra-o diretamente no seu navegador
+
+### Opção 2: Usando um servidor local
 ```bash
 npm install
-npm run dev
+npm start
 ```
 
 Acesse [http://localhost:3000](http://localhost:3000) para visualizar o app.
 
-
-
-
-## � Estrutura de Pastas
-
+### Opção 3: Deploy no GitHub Pages
+```bash
+npm run deploy
 ```
-src/
-├── app/                 # Páginas e rotas do Next.js
-├── components/          # Componentes reutilizáveis
-│   └── ui/              # Componentes shadcn/ui
-├── hooks/               # Hooks personalizados
-└── lib/                 # Funções utilitárias e configurações
-```
-
-
-## 🎨 Componentes e Recursos
-
-O projeto utiliza diversos componentes modernos para interface e experiência do usuário, como:
-- Formulários (input, botão, alerta)
-- Feedback visual (toast, skeleton, progress)
-- Navegação (menu, sidebar, tabs)
-- Layout responsivo
 
 ## 📄 Licença
 

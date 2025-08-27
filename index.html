@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de IMC - Calcule seu Índice de Massa Corporal</title>
+  <meta name="description" content="Calculadora de IMC online com histórico, validação e armazenamento local. Calcule seu Índice de Massa Corporal e acompanhe sua evolução.">
+  <meta name="keywords" content="IMC, Índice de Massa Corporal, calculadora de IMC, peso ideal, saúde, fitness, nutrição">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            background: 'hsl(var(--background))',
+            foreground: 'hsl(var(--foreground))',
+            card: {
+              DEFAULT: 'hsl(var(--card))',
+              foreground: 'hsl(var(--card-foreground))'
+            },
+            popover: {
+              DEFAULT: 'hsl(var(--popover))',
+              foreground: 'hsl(var(--popover-foreground))'
+            },
+            primary: {
+              DEFAULT: 'hsl(var(--primary))',
+              foreground: 'hsl(var(--primary-foreground))'
+            },
+            secondary: {
+              DEFAULT: 'hsl(var(--secondary))',
+              foreground: 'hsl(var(--secondary-foreground))'
+            },
+            muted: {
+              DEFAULT: 'hsl(var(--muted))',
+              foreground: 'hsl(var(--muted-foreground))'
+            },
+            accent: {
+              DEFAULT: 'hsl(var(--accent))',
+              foreground: 'hsl(var(--accent-foreground))'
+            },
+            destructive: {
+              DEFAULT: 'hsl(var(--destructive))',
+              foreground: 'hsl(var(--destructive-foreground))'
+            },
+            border: 'hsl(var(--border))',
+            input: 'hsl(var(--input))',
+            ring: 'hsl(var(--ring))',
+            chart: {
+              '1': 'hsl(var(--chart-1))',
+              '2': 'hsl(var(--chart-2))',
+              '3': 'hsl(var(--chart-3))',
+              '4': 'hsl(var(--chart-4))',
+              '5': 'hsl(var(--chart-5))'
+            }
+          },
+          borderRadius: {
+            lg: 'var(--radius)',
+            md: 'calc(var(--radius) - 2px)',
+            sm: 'calc(var(--radius) - 4px)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --radius: 0.625rem;
+      --background: 0 0% 100%;
+      --foreground: 0 0% 14.5%;
+      --card: 0 0% 100%;
+      --card-foreground: 0 0% 14.5%;
+      --popover: 0 0% 100%;
+      --popover-foreground: 0 0% 14.5%;
+      --primary: 0 0% 20.5%;
+      --primary-foreground: 0 0% 98.5%;
+      --secondary: 0 0% 97%;
+      --secondary-foreground: 0 0% 20.5%;
+      --muted: 0 0% 97%;
+      --muted-foreground: 0 0% 55.6%;
+      --accent: 0 0% 97%;
+      --accent-foreground: 0 0% 20.5%;
+      --destructive: 27.325 0.245 57.7%;
+      --border: 0 0% 92.2%;
+      --input: 0 0% 92.2%;
+      --ring: 0 0% 70.8%;
+      --chart-1: 41.116 0.222 64.6%;
+      --chart-2: 184.704 0.118 60%;
+      --chart-3: 227.392 0.07 39.8%;
+      --chart-4: 84.429 0.189 82.8%;
+      --chart-5: 70.08 0.188 76.9%;
+    }
+
+    .dark {
+      --background: 0 0% 14.5%;
+      --foreground: 0 0% 98.5%;
+      --card: 0 0% 20.5%;
+      --card-foreground: 0 0% 98.5%;
+      --popover: 0 0% 20.5%;
+      --popover-foreground: 0 0% 98.5%;
+      --primary: 0 0% 92.2%;
+      --primary-foreground: 0 0% 20.5%;
+      --secondary: 0 0% 26.9%;
+      --secondary-foreground: 0 0% 98.5%;
+      --muted: 0 0% 26.9%;
+      --muted-foreground: 0 0% 70.8%;
+      --accent: 0 0% 26.9%;
+      --accent-foreground: 0 0% 98.5%;
+      --destructive: 22.216 0.191 70.4%;
+      --border: 0 0% 100% / 10%;
+      --input: 0 0% 100% / 15%;
+      --ring: 0 0% 55.6%;
+      --chart-1: 264.376 0.243 48.8%;
+      --chart-2: 162.48 0.17 69.6%;
+      --chart-3: 70.08 0.188 76.9%;
+      --chart-4: 303.9 0.265 62.7%;
+      --chart-5: 16.439 0.246 64.5%;
+    }
+
+    body {
+      background: linear-gradient(to bottom right, hsl(var(--background)), hsl(var(--muted)));
+    }
+
+    .dark body {
+      background: linear-gradient(to bottom right, hsl(var(--background)), hsl(var(--muted)));
+    }
+
+    /* Card styles */
+    .card {
+      background-color: hsl(var(--card));
+      color: hsl(var(--card-foreground));
+      border-radius: var(--radius);
+      border: 1px solid hsl(var(--border));
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Button styles */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+      border-radius: calc(var(--radius) - 2px);
+      font-size: 0.875rem;
+      font-weight: 500;
+      -webkit-transition: all 0.15s ease-in-out;
+      -moz-transition: all 0.15s ease-in-out;
+      transition: all 0.15s ease-in-out;
+      cursor: pointer;
+      outline: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    .btn:disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    .btn-default {
+      background-color: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-default:hover {
+      background-color: hsla(var(--primary) / 0.9);
+    }
+
+    .btn-outline {
+      background-color: hsl(var(--background));
+      color: hsl(var(--foreground));
+      border: 1px solid hsl(var(--border));
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    .btn-outline:hover {
+      background-color: hsl(var(--accent));
+    }
+
+    .dark .btn-outline {
+      background-color: hsla(var(--input) / 0.3);
+    }
+
+    .dark .btn-outline:hover {
+      background-color: hsla(var(--input) / 0.5);
+    }
+
+    /* Input styles */
+    .input {
+      display: flex;
+      height: 2.25rem;
+      width: 100%;
+      min-width: 0;
+      border-radius: calc(var(--radius) - 2px);
+      border: 1px solid hsl(var(--input));
+      background-color: transparent;
+      padding: 0.5rem 0.75rem;
+      font-size: 1rem;
+      -webkit-transition: box-shadow 0.15s ease-in-out;
+      -moz-transition: box-shadow 0.15s ease-in-out;
+      transition: box-shadow 0.15s ease-in-out;
+      outline: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    .input:focus {
+      border-color: hsl(var(--ring));
+      box-shadow: 0 0 0 3px hsla(var(--ring) / 0.5);
+    }
+
+    .dark .input {
+      background-color: hsla(var(--input) / 0.3);
+    }
+
+    /* Label styles */
+    .label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Badge styles */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: calc(var(--radius) - 2px);
+      border: 1px solid transparent;
+      padding: 0.125rem 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      width: fit-content;
+      white-space: nowrap;
+      gap: 0.25rem;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .badge-default {
+      background-color: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+    }
+
+    .badge-secondary {
+      background-color: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
+      border: 1px solid hsl(var(--border));
+    }
+
+    /* Alert styles */
+    .alert {
+      position: relative;
+      width: 100%;
+      border-radius: calc(var(--radius) - 2px);
+      border: 1px solid hsl(var(--border));
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    .alert-destructive {
+      color: hsl(var(--destructive));
+      background-color: hsl(var(--card));
+      border-color: hsl(var(--destructive));
+    }
+
+    /* Custom color classes for IMC categories */
+    .bg-blue-100 { background-color: #dbeafe; }
+    .text-blue-800 { color: #1e40af; }
+    .border-blue-200 { border-color: #bfdbfe; }
+    
+    .bg-green-100 { background-color: #dcfce7; }
+    .text-green-800 { color: #166534; }
+    .border-green-200 { border-color: #bbf7d0; }
+    
+    .bg-yellow-100 { background-color: #fef9c3; }
+    .text-yellow-800 { color: #854d0e; }
+    .border-yellow-200 { border-color: #fef08a; }
+    
+    .bg-orange-100 { background-color: #fed7aa; }
+    .text-orange-800 { color: #9a3412; }
+    .border-orange-200 { border-color: #fdba74; }
+    
+    .bg-red-100 { background-color: #fecaca; }
+    .text-red-800 { color: #991b1b; }
+    .border-red-200 { border-color: #fca5a5; }
+    
+    .bg-red-200 { background-color: #fecaca; }
+    .text-red-900 { color: #7f1d1d; }
+    .border-red-300 { border-color: #fca5a5; }
+    
+    .dark .bg-blue-100 { background-color: #1e3a8a; }
+    .dark .text-blue-800 { color: #93c5fd; }
+    
+    .dark .bg-green-100 { background-color: #14532d; }
+    .dark .text-green-800 { color: #86efac; }
+    
+    .dark .bg-yellow-100 { background-color: #713f12; }
+    .dark .text-yellow-800 { color: #fde047; }
+    
+    .dark .bg-orange-100 { background-color: #9a3412; }
+    .dark .text-orange-800 { color: #fdba74; }
+    
+    .dark .bg-red-100 { background-color: #7f1d1d; }
+    .dark .text-red-800 { color: #fca5a5; }
+    
+    .dark .bg-red-200 { background-color: #7f1d1d; }
+    .dark .text-red-900 { color: #fecaca; }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4">
+  <div class="max-w-4xl mx-auto space-y-6">
+    <div class="text-center py-8">
+      <div class="flex items-center justify-center gap-3 mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-8 w-8 text-blue-600">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white">
+          Calculadora de IMC
+        </h1>
+      </div>
+      <p class="text-lg text-gray-600 dark:text-gray-300">
+        Calcule seu Índice de Massa Corporal e acompanhe sua evolução
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Calculator Card -->
+      <div class="card shadow-lg">
+        <div class="mb-4">
+          <div class="flex items-center gap-2 mb-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5">
+              <rect width="20" height="10" x="2" y="7" rx="2" ry="2"/>
+              <line x1="12" x2="12" y1="7" y2="2"/>
+              <line x1="7" x2="7" y1="7" y2="2"/>
+              <line x1="17" x2="17" y1="7" y2="2"/>
+              <line x1="2" x2="22" y1="17" y2="17"/>
+            </svg>
+            <h2 class="font-semibold">Calcular IMC</h2>
+          </div>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            Insira seu peso e altura para calcular seu IMC
+          </p>
+        </div>
+        <div class="space-y-4">
+          <div class="space-y-2">
+            <label for="peso" class="label">Peso (kg)</label>
+            <input
+              id="peso"
+              type="number"
+              placeholder="Ex: 70"
+              class="input"
+              step="0.1"
+              min="0.1"
+              max="500"
+            />
+          </div>
+          
+          <div class="space-y-2">
+            <label for="altura" class="label">Altura (m)</label>
+            <input
+              id="altura"
+              type="number"
+              placeholder="Ex: 1.75"
+              class="input"
+              step="0.01"
+              min="0.1"
+              max="3"
+            />
+          </div>
+
+          <div id="error-message" class="alert alert-destructive hidden">
+            <span id="error-text"></span>
+          </div>
+
+          <div class="flex gap-2">
+            <button id="calculate-btn" class="btn btn-default flex-1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                <rect width="20" height="10" x="2" y="7" rx="2" ry="2"/>
+                <line x1="12" x2="12" y1="7" y2="2"/>
+                <line x1="7" x2="7" y1="7" y2="2"/>
+                <line x1="17" x2="17" y1="7" y2="2"/>
+                <line x1="2" x2="22" y1="17" y2="17"/>
+              </svg>
+              Calcular
+            </button>
+            <button id="clear-btn" class="btn btn-outline">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                <path d="M3 6h18"/>
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+              </svg>
+              Limpar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Card -->
+      <div class="card shadow-lg">
+        <div class="mb-4">
+          <h2 class="font-semibold">Resultado</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            Seu Índice de Massa Corporal
+          </p>
+        </div>
+        <div id="result-content">
+          <div class="text-center py-8 text-gray-500">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 mx-auto mb-4 opacity-50">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+            <p>Insira seus dados e clique em "Calcular"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Card -->
+    <div id="history-card" class="card shadow-lg hidden">
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <h2 class="font-semibold">Histórico de Cálculos</h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            Últimos 10 cálculos salvos
+          </p>
+        </div>
+        <button id="clear-history-btn" class="btn btn-outline text-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+            <path d="M3 6h18"/>
+            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+          </svg>
+          Limpar Histórico
+        </button>
+      </div>
+      <div id="history-content" class="space-y-3 max-h-96 overflow-y-auto">
+        <!-- History items will be added here dynamically -->
+      </div>
+    </div>
+
+    <!-- About Card -->
+    <div class="card shadow-lg">
+      <h2 class="font-semibold mb-4">Sobre o IMC</h2>
+      <div class="text-sm text-gray-600 dark:text-gray-300 space-y-2">
+        <p>
+          O Índice de Massa Corporal (IMC) é uma medida internacional usada para calcular 
+          se uma pessoa está no peso ideal. Desenvolvido pelo polímata Lambert Quételet 
+          no século XIX, é um método simples e rápido para avaliação do peso corporal.
+        </p>
+        <p>
+          <strong>Fórmula:</strong> IMC = Peso (kg) ÷ Altura² (m)
+        </p>
+        <p>
+          <strong>Importante:</strong> O IMC é uma ferramenta de triagem e não considera 
+          fatores como composição corporal, massa muscular, idade e sexo. Consulte sempre 
+          um profissional de saúde para uma avaliação completa.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // DOM Elements
+    const pesoInput = document.getElementById('peso');
+    const alturaInput = document.getElementById('altura');
+    const calculateBtn = document.getElementById('calculate-btn');
+    const clearBtn = document.getElementById('clear-btn');
+    const clearHistoryBtn = document.getElementById('clear-history-btn');
+    const errorMessage = document.getElementById('error-message');
+    const errorText = document.getElementById('error-text');
+    const resultContent = document.getElementById('result-content');
+    const historyCard = document.getElementById('history-card');
+    const historyContent = document.getElementById('history-content');
+
+    // State
+    let history = [];
+
+    // Load history from localStorage
+    function loadHistory() {
+      const savedHistory = localStorage.getItem('imcHistorico');
+      if (savedHistory) {
+        history = JSON.parse(savedHistory);
+        renderHistory();
+      }
+    }
+
+    // Save history to localStorage
+    function saveHistory() {
+      localStorage.setItem('imcHistorico', JSON.stringify(history));
+      renderHistory();
+    }
+
+    // Validate input
+    function validateInput() {
+      errorMessage.classList.add('hidden');
+      
+      const peso = pesoInput.value;
+      const altura = alturaInput.value;
+      
+      if (!peso || !altura) {
+        showError("Por favor, preencha todos os campos.");
+        return false;
+      }
+      
+      const pesoNum = parseFloat(peso);
+      const alturaNum = parseFloat(altura);
+      
+      if (isNaN(pesoNum) || isNaN(alturaNum)) {
+        showError("Por favor, insira valores numéricos válidos.");
+        return false;
+      }
+      
+      if (pesoNum <= 0 || pesoNum > 500) {
+        showError("O peso deve estar entre 1 e 500 kg.");
+        return false;
+      }
+      
+      if (alturaNum <= 0 || alturaNum > 3) {
+        showError("A altura deve estar entre 0.1 e 3 metros.");
+        return false;
+      }
+      
+      return true;
+    }
+
+    // Show error message
+    function showError(message) {
+      errorText.textContent = message;
+      errorMessage.classList.remove('hidden');
+    }
+
+    // Calculate IMC
+    function calculateIMC() {
+      if (!validateInput()) return;
+      
+      const peso = parseFloat(pesoInput.value);
+      const altura = parseFloat(alturaInput.value);
+      const imc = peso / (altura * altura);
+      
+      let categoria = "";
+      let descricao = "";
+      let cor = "";
+      
+      if (imc < 18.5) {
+        categoria = "Abaixo do peso";
+        descricao = "Você está abaixo do peso ideal. Consulte um nutricionista.";
+        cor = "bg-blue-100 text-blue-800 border-blue-200";
+      } else if (imc < 25) {
+        categoria = "Peso normal";
+        descricao = "Parabéns! Você está no peso ideal.";
+        cor = "bg-green-100 text-green-800 border-green-200";
+      } else if (imc < 30) {
+        categoria = "Sobrepeso";
+        descricao = "Você está com sobrepeso. Considere fazer exercícios e reavaliar sua dieta.";
+        cor = "bg-yellow-100 text-yellow-800 border-yellow-200";
+      } else if (imc < 35) {
+        categoria = "Obesidade Grau I";
+        descricao = "Obesidade leve. Procure orientação médica.";
+        cor = "bg-orange-100 text-orange-800 border-orange-200";
+      } else if (imc < 40) {
+        categoria = "Obesidade Grau II";
+        descricao = "Obesidade moderada. Busque ajuda profissional.";
+        cor = "bg-red-100 text-red-800 border-red-200";
+      } else {
+        categoria = "Obesidade Grau III";
+        descricao = "Obesidade grave. Procure um médico urgentemente.";
+        cor = "bg-red-200 text-red-900 border-red-300";
+      }
+      
+      // Save to history
+      const newRecord = {
+        id: Date.now().toString(),
+        peso: peso,
+        altura: altura,
+        imc: imc,
+        categoria: categoria,
+        data: new Date().toLocaleDateString('pt-BR')
+      };
+      
+      history.unshift(newRecord);
+      if (history.length > 10) {
+        history = history.slice(0, 10);
+      }
+      
+      saveHistory();
+      
+      // Display result
+      displayResult(imc, categoria, descricao, cor);
+    }
+
+    // Display result
+    function displayResult(imc, categoria, descricao, cor) {
+      resultContent.innerHTML = `
+        <div class="space-y-4">
+          <div class="text-center">
+            <div class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              ${imc.toFixed(1)}
+            </div>
+            <div class="badge ${cor} text-sm px-3 py-1">
+              ${categoria}
+            </div>
+          </div>
+          
+          <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+            <p class="text-sm text-gray-600 dark:text-gray-300">
+              ${descricao}
+            </p>
+          </div>
+
+          <div class="space-y-2">
+            <h4 class="font-semibold text-sm">Faixas de IMC:</h4>
+            <div class="space-y-1 text-xs">
+              <div class="flex justify-between">
+                <span>Abaixo do peso:</span>
+                <span class="font-mono">&lt; 18.5</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Peso normal:</span>
+                <span class="font-mono">18.5 - 24.9</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Sobrepeso:</span>
+                <span class="font-mono">25.0 - 29.9</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Obesidade Grau I:</span>
+                <span class="font-mono">30.0 - 34.9</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Obesidade Grau II:</span>
+                <span class="font-mono">35.0 - 39.9</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Obesidade Grau III:</span>
+                <span class="font-mono">≥ 40.0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Clear form
+    function clearForm() {
+      pesoInput.value = '';
+      alturaInput.value = '';
+      errorMessage.classList.add('hidden');
+      resultContent.innerHTML = `
+        <div class="text-center py-8 text-gray-500">
+          <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 mx-auto mb-4 opacity-50">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+          <p>Insira seus dados e clique em "Calcular"</p>
+        </div>
+      `;
+    }
+
+    // Render history
+    function renderHistory() {
+      if (history.length === 0) {
+        historyCard.classList.add('hidden');
+        return;
+      }
+      
+      historyCard.classList.remove('hidden');
+      
+      historyContent.innerHTML = '';
+      
+      history.forEach(registro => {
+        let badgeClass = "";
+        if (registro.categoria === "Abaixo do peso") {
+          badgeClass = "bg-blue-100 text-blue-800 border-blue-200";
+        } else if (registro.categoria === "Peso normal") {
+          badgeClass = "bg-green-100 text-green-800 border-green-200";
+        } else if (registro.categoria === "Sobrepeso") {
+          badgeClass = "bg-yellow-100 text-yellow-800 border-yellow-200";
+        } else if (registro.categoria === "Obesidade Grau I") {
+          badgeClass = "bg-orange-100 text-orange-800 border-orange-200";
+        } else if (registro.categoria === "Obesidade Grau II") {
+          badgeClass = "bg-red-100 text-red-800 border-red-200";
+        } else {
+          badgeClass = "bg-red-200 text-red-900 border-red-300";
+        }
+        
+        const historyItem = document.createElement('div');
+        historyItem.className = "flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg";
+        historyItem.innerHTML = `
+          <div class="flex-1">
+            <div class="flex items-center gap-4">
+              <div class="text-sm">
+                <span class="font-medium">${registro.peso}kg</span>
+                <span class="text-gray-500 mx-2">×</span>
+                <span class="font-medium">${registro.altura}m</span>
+              </div>
+              <div class="badge badge-secondary text-xs">
+                IMC: ${registro.imc.toFixed(1)}
+              </div>
+              <div class="badge ${badgeClass} text-xs">
+                ${registro.categoria}
+              </div>
+            </div>
+            <div class="text-xs text-gray-500 mt-1">
+              ${registro.data}
+            </div>
+          </div>
+        `;
+        
+        historyContent.appendChild(historyItem);
+      });
+    }
+
+    // Clear history
+    function clearHistory() {
+      history = [];
+      localStorage.removeItem('imcHistorico');
+      historyCard.classList.add('hidden');
+    }
+
+    // Event Listeners
+    calculateBtn.addEventListener('click', calculateIMC);
+    clearBtn.addEventListener('click', clearForm);
+    clearHistoryBtn.addEventListener('click', clearHistory);
+
+    // Initialize
+    loadHistory();
+  </script>
+</body>
+</html>
