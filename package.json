@@ -1,0 +1,22 @@
+{
+  "name": "imc-calculator",
+  "version": "1.0.0",
+  "description": "Calculadora de IMC em HTML único para GitHub Pages",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "deploy": "gh-pages -d ."
+  },
+  "keywords": [
+    "IMC",
+    "calculadora",
+    "HTML",
+    "GitHub Pages"
+  ],
+  "author": "Z.ai Team",
+  "license": "MIT",
+  "devDependencies": {
+    "gh-pages": "^6.3.0",
+    "serve": "^14.2.4"
+  }
+}
