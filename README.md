@@ -2,8 +2,7 @@
 
 Aplicativo web para cálculo do Índice de Massa Corporal (IMC) em um único arquivo HTML, desenvolvido para funcionar corretamente no GitHub Pages.
 
-<!-- ![IMC Calculator Demo](https://raw.githubusercontent.com/JonJonesBR/IMC_APP/main/imc-calculator-demo.png) -->
-<!-- Para adicionar uma imagem de demonstração, veja as instruções em SCREENSHOT_INSTRUCTIONS.md -->
+![IMC Calculator Demo](https://github.com/JonJonesBR/IMC_APP/blob/60bb7fa437ba6039a04f8fa294485439f985fcc2/imagem.JPG?raw=true)
 
 ## ✨ Tecnologias Utilizadas
 
